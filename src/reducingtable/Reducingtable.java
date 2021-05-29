@@ -115,7 +115,7 @@ public class Reducingtable {
         reducedTable.put(Letter, newSameAction);
     }
     public static void main(String[] args) {
-        reduction(1, "H", 1);
+        reduction(2, "H", 1);
         reduction(2, "E", 3);
         ArrayList<String> arr = reducedTable.get("E");
         for (int i = 0; i < arr.size(); i++) {
