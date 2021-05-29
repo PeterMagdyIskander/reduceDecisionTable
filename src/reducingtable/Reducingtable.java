@@ -39,13 +39,16 @@ public class Reducingtable {
         }
         return allConditions;
     }
-    static void reduce() {
+    static Hashtable<String, ArrayList<String>> makeHashtable(){
         ArrayList<String> conditionsAndOutput = getInput();
         Hashtable<String, ArrayList<String>> sameAction = new Hashtable<>();
         for (int i = 0; i < conditionsAndOutput.size(); i++) {
-            String[] arrOfStr = conditionsAndOutput.get(i).split(",", 3);
             sameAction.put(conditionsAndOutput.get(i).substring(4), getArr(conditionsAndOutput.get(i).substring(4)));
         }
+        return sameAction;
+    }
+    static void reduce() {
+        Hashtable<String, ArrayList<String>> sameAction=makeHashtable();
         ArrayList<String> arr = sameAction.get("E");
         for (int i = 0; i < arr.size(); i++) {
             System.out.println(arr.get(i));
