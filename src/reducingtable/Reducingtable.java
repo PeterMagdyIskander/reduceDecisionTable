@@ -22,6 +22,12 @@ public class Reducingtable {
     public static void main(String[] args) {
         int numberOfconditions=3;
         int numberOfActions=1;
+        Hashtable<String, ArrayList<String>> sameAction = new Hashtable<>();
+        int trialll;
+        
+        
+    }
+    public void KEKL(){
         ArrayList<String>conditionsAndOutput=new ArrayList<>();
         conditionsAndOutput.add("F,F,E");
         conditionsAndOutput.add("T,F,E");
