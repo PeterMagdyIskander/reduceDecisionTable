@@ -10,36 +10,55 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+
 /**
  *
  * @author Not a gaming laptop
  */
 public class Reducingtable {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        int numberOfconditions=3;
-        int numberOfActions=1;
-        Hashtable<String, ArrayList<String>> sameAction = new Hashtable<>();
-        int trialll;
-        int peterMagdyKamal;
-        
-    }
-    public void KEKL(){
-        ArrayList<String>conditionsAndOutput=new ArrayList<>();
+    static ArrayList<String> getInput() {
+        ArrayList<String> conditionsAndOutput = new ArrayList<>();
         conditionsAndOutput.add("F,F,E");
         conditionsAndOutput.add("T,F,E");
         conditionsAndOutput.add("F,T,E");
         conditionsAndOutput.add("T,T,H");
-        Hashtable<String,String[]> sameAction = new Hashtable<>();
+        return conditionsAndOutput;
+    }
+
+    static void mergeCol() {
+
+    }
+    static ArrayList<String> getArr(String action){
+        ArrayList<String> conditionsAndOutput = getInput();
+        ArrayList<String> allConditions=new ArrayList<>();
         for(int i =0;i<conditionsAndOutput.size();i++){
-            String[] arrOfStr =conditionsAndOutput.get(i).split(",",3);
-            
-            sameAction.put(conditionsAndOutput.get(i).substring(4), arrOfStr);
+            if(conditionsAndOutput.get(i).endsWith(action)){
+                allConditions.add(conditionsAndOutput.get(i));
+            }
         }
-        System.out.println(sameAction);
-        
+        return allConditions;
+    }
+    static void reduce() {
+        ArrayList<String> conditionsAndOutput = getInput();
+        Hashtable<String, ArrayList<String>> sameAction = new Hashtable<>();
+        for (int i = 0; i < conditionsAndOutput.size(); i++) {
+            String[] arrOfStr = conditionsAndOutput.get(i).split(",", 3);
+            sameAction.put(conditionsAndOutput.get(i).substring(4), getArr(conditionsAndOutput.get(i).substring(4)));
+        }
+        ArrayList<String> arr = sameAction.get("E");
+        for (int i = 0; i < arr.size(); i++) {
+            System.out.println(arr.get(i));
+        }
+        System.out.println("-------------------------------------");
+        arr = sameAction.get("H");
+        for (int i = 0; i < arr.size(); i++) {
+            System.out.println(arr.get(i));
+        }
+    }
+    
+    public static void main(String[] args) {
+
+        reduce();
     }
 }
