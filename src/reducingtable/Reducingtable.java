@@ -22,17 +22,18 @@ public class Reducingtable {
     public static void main(String[] args) {
         int numberOfconditions=3;
         int numberOfActions=1;
-        Hashtable<String, ArrayList<String>> sameAction = new Hashtable<>();
-        
-        
-    }
-    public void KEKL(){
         ArrayList<String>conditionsAndOutput=new ArrayList<>();
         conditionsAndOutput.add("F,F,E");
         conditionsAndOutput.add("T,F,E");
         conditionsAndOutput.add("F,T,E");
         conditionsAndOutput.add("T,T,H");
-        
+        Hashtable<String,String[]> sameAction = new Hashtable<>();
+        for(int i =0;i<conditionsAndOutput.size();i++){
+            String[] arrOfStr =conditionsAndOutput.get(i).split(",",3);
+            
+            sameAction.put(conditionsAndOutput.get(i).substring(4), arrOfStr);
+        }
+        System.out.println(sameAction);
         
     }
 }
