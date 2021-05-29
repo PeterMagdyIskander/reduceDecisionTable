@@ -23,6 +23,7 @@ public class Reducingtable {
         int numberOfconditions=3;
         int numberOfActions=1;
         Hashtable<String, ArrayList<String>> sameAction = new Hashtable<>();
+        int trialll;
         
         
     }
