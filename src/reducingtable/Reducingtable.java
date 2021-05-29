@@ -24,7 +24,7 @@ public class Reducingtable {
         int numberOfActions=1;
         Hashtable<String, ArrayList<String>> sameAction = new Hashtable<>();
         int trialll;
-        
+        int peterMagdyKamal;
         
     }
     public void KEKL(){
