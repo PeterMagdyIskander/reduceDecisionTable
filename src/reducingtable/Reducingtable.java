@@ -155,12 +155,26 @@ public class Reducingtable {
         }
         reducedTable.put(Letter, newSameAction);
     }
-
     public static void assembly(ArrayList<String> conditionsAndOutput) {
+        
+        
         for (int i = 0; i < ActionValues.length; i++) {
             reduction((int) numberOfConditions, ActionValues[i], conditionsAndOutput);
         }
         System.out.println("Number Of Rules = " + (int) pow(numberOfConditionValues, numberOfConditions));
+        afterReduction();
+    }
+    public static void beforeReduction( Hashtable<String, ArrayList<String>> sameAction){
+        System.out.println("------- BEFORE REDUCING -------");
+        for(int i=0;i<ActionValues.length;i++){
+            ArrayList<String> arr = sameAction.get(ActionValues[i]);
+            for (int j = 0; j < arr.size(); j++) {
+                System.out.println(arr.get(j));
+            }
+        }
+    }
+    public static void afterReduction(){
+        System.out.println("------- AFTER REDUCING -------");
         for (int i = 0; i < ActionValues.length; i++) {
             ArrayList<String> arr = reducedTable.get(ActionValues[i]);
             for (int j = 0; j < arr.size(); j++) {
@@ -168,9 +182,9 @@ public class Reducingtable {
             }
         }
     }
-
     public static void main(String[] args) {
         ArrayList<String> conditionsAndOutput = getInput();
+        beforeReduction(makeHashtable((int)numberOfConditions, conditionsAndOutput));
         assembly(conditionsAndOutput);
     }
 }
