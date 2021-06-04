@@ -24,9 +24,10 @@ public class Reducingtable {
     public static int numberOfColInEachBigArr = 0;
     public static int numberOfConditionValues = 0;
     public static String[] ActionValues;
-    public static ArrayList<ArrayList<String>> keyValues= new ArrayList<>();
+    public static ArrayList<ArrayList<String>> keyValues = new ArrayList<>();
+
     static ArrayList<String> getInput() {
-        
+
         ArrayList<String> conditionsAndOutput = new ArrayList<>();
         Scanner scannerObject = new Scanner(System.in);
         System.out.print("Conditions separated by commas : ");
@@ -42,16 +43,14 @@ public class Reducingtable {
         System.out.print("Action Values separated by commas : ");
         input = scannerObject.nextLine();
         ActionValues = input.split(",");
-        
-      double numberOfIterations = pow(numberOfConditionValues, numberOfConditions);
+
+        double numberOfIterations = pow(numberOfConditionValues, numberOfConditions);
         System.out.println("Action scenario ");
         for (int i = 0; i < numberOfIterations; i++) {
             input = scannerObject.nextLine();
             conditionsAndOutput.add(input);
         }
-         
-        /*
-                   
+        /*        
         conditionsAndOutput.add("PE,=<75,Y,C");
         conditionsAndOutput.add("PE,=<75,N,C");
 
@@ -62,30 +61,39 @@ public class Reducingtable {
         conditionsAndOutput.add("PA,=<75,N,DC");
         conditionsAndOutput.add("PA,>75,Y,C");
         conditionsAndOutput.add("PA,>75,N,DC");
-*/
+         */
+        ///a harder test case
+        /*
+       a,y,m,W,X,EMP,Z
+       a,y,f,EMP,EMP,EMP,Z
+       a,n,m,EMP,X,EMP,Z
+       a,n,f,EMP,EMP,EMP,Z
+       b,y,m,W,EMP,EMP,Z
+       b,y,f,EMP,EMP,EMP,Z
+       b,n,m,EMP,EMP,EMP,Z
+       b,n,f,EMP,EMP,Y,Z
+         */
         return conditionsAndOutput;
     }
 
     static ArrayList<String> getArr(int numOfConditions, ArrayList<String> actionCol, ArrayList<String> conditionsAndOutput) {
-        
+
         ArrayList<String> allConditions = new ArrayList<>();
         for (int i = 0; i < conditionsAndOutput.size(); i++) {
             String[] key = conditionsAndOutput.get(i).split(",");
-            boolean typical=true;
-            
-            for(int j=numOfConditions;j<key.length;j++){
-                int counter=0;
-                if(!(key[j].toString().equals(actionCol.get(counter).toString()))){
-                    typical=false;
+
+            boolean typical = true;
+            for (int j = numOfConditions; j < key.length; j++) {
+
+                if (!key[j].equals(actionCol.get(j-numOfConditions).toString())) {
+                    typical = false;
                     break;
                 }
-                counter++;
             }
-            if(typical){
-                System.out.println("DASSDA ");
+            if (typical) {
                 allConditions.add(conditionsAndOutput.get(i));
             }
-                
+
         }
         return allConditions;
     }
@@ -93,20 +101,19 @@ public class Reducingtable {
     static Hashtable<ArrayList<String>, ArrayList<String>> makeHashtable(int numOfConditions, ArrayList<String> conditionsAndOutput) {
 
         Hashtable<ArrayList<String>, ArrayList<String>> sameAction = new Hashtable<>();
-        
-        
+
         for (int i = 0; i < conditionsAndOutput.size(); i++) {
             String[] colOfConditionsAndOutput = conditionsAndOutput.get(i).split(",");
-            ArrayList<String> actionCol=new ArrayList<>();
-            for(int j=numOfConditions;j<colOfConditionsAndOutput.length;j++){
-                
+            ArrayList<String> actionCol = new ArrayList<>();
+            for (int j = numOfConditions; j < colOfConditionsAndOutput.length; j++) {
+
                 actionCol.add(colOfConditionsAndOutput[j]);
             }
             sameAction.put(actionCol, getArr(numOfConditions, actionCol, conditionsAndOutput));
-            if(!keyValues.contains(actionCol))
+            if (!keyValues.contains(actionCol)) {
                 keyValues.add(actionCol);
-            
-            
+            }
+
         }
         return sameAction;
     }
@@ -181,26 +188,28 @@ public class Reducingtable {
         }
         reducedTable.put(key, newSameAction);
     }
+
     public static void assembly(ArrayList<String> conditionsAndOutput) {
-        
-        
+
         for (int i = 0; i < keyValues.size(); i++) {
-            reduction((int)numberOfConditions,keyValues.get(i), conditionsAndOutput);
+            reduction((int) numberOfConditions, keyValues.get(i), conditionsAndOutput);
         }
-        
+
         System.out.println("Number Of Rules = " + (int) pow(numberOfConditionValues, numberOfConditions));
         afterReduction();
     }
-    public static void beforeReduction( Hashtable<ArrayList<String>, ArrayList<String>> sameAction){
+
+    public static void beforeReduction(Hashtable<ArrayList<String>, ArrayList<String>> sameAction) {
         System.out.println("------- BEFORE REDUCING -------");
-        for(int i=0;i<keyValues.size();i++){
+        for (int i = 0; i < keyValues.size(); i++) {
             ArrayList<String> arr = sameAction.get(keyValues.get(i));
             for (int j = 0; j < arr.size(); j++) {
                 System.out.println(arr.get(j));
             }
         }
     }
-    public static void afterReduction(){
+
+    public static void afterReduction() {
         System.out.println("------- AFTER REDUCING -------");
         for (int i = 0; i < keyValues.size(); i++) {
             ArrayList<String> arr = reducedTable.get(keyValues.get(i));
@@ -209,12 +218,12 @@ public class Reducingtable {
             }
         }
     }
+
     public static void main(String[] args) {
         ArrayList<String> conditionsAndOutput = getInput();
         Hashtable<ArrayList<String>, ArrayList<String>> sad;
         sad = makeHashtable(numberOfConditions, conditionsAndOutput);
         beforeReduction(sad);
-        System.out.println(sad);
         assembly(conditionsAndOutput);
     }
 }
