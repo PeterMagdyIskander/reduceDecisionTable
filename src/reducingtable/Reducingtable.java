@@ -19,13 +19,14 @@ import java.util.Scanner;
  */
 public class Reducingtable {
 
-    public static Hashtable<String, ArrayList<String>> reducedTable = new Hashtable<>();
-    public static double numberOfConditions = 0;
+    public static Hashtable<ArrayList<String>, ArrayList<String>> reducedTable = new Hashtable<>();
+    public static int numberOfConditions = 0;
     public static int numberOfColInEachBigArr = 0;
-    public static double numberOfConditionValues = 0;
+    public static int numberOfConditionValues = 0;
     public static String[] ActionValues;
-
+    public static ArrayList<ArrayList<String>> keyValues= new ArrayList<>();
     static ArrayList<String> getInput() {
+        
         ArrayList<String> conditionsAndOutput = new ArrayList<>();
         Scanner scannerObject = new Scanner(System.in);
         System.out.print("Conditions separated by commas : ");
@@ -42,14 +43,15 @@ public class Reducingtable {
         input = scannerObject.nextLine();
         ActionValues = input.split(",");
         
-        double numberOfIterations = pow(numberOfConditionValues, numberOfConditions);
+      double numberOfIterations = pow(numberOfConditionValues, numberOfConditions);
         System.out.println("Action scenario ");
         for (int i = 0; i < numberOfIterations; i++) {
             input = scannerObject.nextLine();
             conditionsAndOutput.add(input);
         }
          
-                 /*
+        /*
+                   
         conditionsAndOutput.add("PE,=<75,Y,C");
         conditionsAndOutput.add("PE,=<75,N,C");
 
@@ -64,30 +66,54 @@ public class Reducingtable {
         return conditionsAndOutput;
     }
 
-    static ArrayList<String> getArr(int numOfConditions, String action, ArrayList<String> conditionsAndOutput) {
+    static ArrayList<String> getArr(int numOfConditions, ArrayList<String> actionCol, ArrayList<String> conditionsAndOutput) {
+        
         ArrayList<String> allConditions = new ArrayList<>();
         for (int i = 0; i < conditionsAndOutput.size(); i++) {
             String[] key = conditionsAndOutput.get(i).split(",");
-            if (key[numOfConditions].equals(action)) {
+            boolean typical=true;
+            
+            for(int j=numOfConditions;j<key.length;j++){
+                int counter=0;
+                if(!(key[j].toString().equals(actionCol.get(counter).toString()))){
+                    typical=false;
+                    break;
+                }
+                counter++;
+            }
+            if(typical){
+                System.out.println("DASSDA ");
                 allConditions.add(conditionsAndOutput.get(i));
             }
+                
         }
         return allConditions;
     }
 
-    static Hashtable<String, ArrayList<String>> makeHashtable(int numOfConditions, ArrayList<String> conditionsAndOutput) {
+    static Hashtable<ArrayList<String>, ArrayList<String>> makeHashtable(int numOfConditions, ArrayList<String> conditionsAndOutput) {
 
-        Hashtable<String, ArrayList<String>> sameAction = new Hashtable<>();
+        Hashtable<ArrayList<String>, ArrayList<String>> sameAction = new Hashtable<>();
+        
+        
         for (int i = 0; i < conditionsAndOutput.size(); i++) {
-            String[] key = conditionsAndOutput.get(i).split(",");
-            sameAction.put(key[numOfConditions], getArr(numOfConditions, key[numOfConditions], conditionsAndOutput));
+            String[] colOfConditionsAndOutput = conditionsAndOutput.get(i).split(",");
+            ArrayList<String> actionCol=new ArrayList<>();
+            for(int j=numOfConditions;j<colOfConditionsAndOutput.length;j++){
+                
+                actionCol.add(colOfConditionsAndOutput[j]);
+            }
+            sameAction.put(actionCol, getArr(numOfConditions, actionCol, conditionsAndOutput));
+            if(!keyValues.contains(actionCol))
+                keyValues.add(actionCol);
+            
+            
         }
         return sameAction;
     }
 
-    static void reduction(int numOfConditions, String Letter, ArrayList<String> conditionsAndOutput) {
-        Hashtable<String, ArrayList<String>> sameAction = makeHashtable(numOfConditions, conditionsAndOutput);
-        int size = sameAction.get(Letter).size();
+    static void reduction(int numOfConditions, ArrayList<String> key, ArrayList<String> conditionsAndOutput) {
+        Hashtable<ArrayList<String>, ArrayList<String>> sameAction = makeHashtable(numOfConditions, conditionsAndOutput);
+        int size = sameAction.get(key).size();
         int[] falseIndices = new int[size];
         ArrayList<ArrayList<Integer>> indexToMakeDash = new ArrayList<>();
         ////initial all the array is populated with 2 meaning everything can change
@@ -97,7 +123,7 @@ public class Reducingtable {
             toBeAddedToList.add(789);
             indexToMakeDash.add(toBeAddedToList);
         }
-        ArrayList<String> bigArr = sameAction.get(Letter);
+        ArrayList<String> bigArr = sameAction.get(key);
         for (int i = 0; i < bigArr.size(); i++) {
             if (falseIndices[i] != 0 && falseIndices[i] != 1) {
 
@@ -131,12 +157,12 @@ public class Reducingtable {
 
             }
         }
-        merge(numOfConditions, falseIndices, indexToMakeDash, Letter, conditionsAndOutput);
+        merge(numOfConditions, falseIndices, indexToMakeDash, key, conditionsAndOutput);
     }
 
-    static void merge(int numOfConditions, int[] falseIndices, ArrayList<ArrayList<Integer>> indexToMakeDash, String Letter, ArrayList<String> conditionsAndOutput) {
-        Hashtable<String, ArrayList<String>> sameAction = makeHashtable(numOfConditions, conditionsAndOutput);
-        ArrayList<String> bigArr = sameAction.get(Letter);
+    static void merge(int numOfConditions, int[] falseIndices, ArrayList<ArrayList<Integer>> indexToMakeDash, ArrayList<String> key, ArrayList<String> conditionsAndOutput) {
+        Hashtable<ArrayList<String>, ArrayList<String>> sameAction = makeHashtable(numOfConditions, conditionsAndOutput);
+        ArrayList<String> bigArr = sameAction.get(key);
         ArrayList<String> newSameAction = new ArrayList<>();
         for (int i = 0; i < falseIndices.length; i++) {
             if (falseIndices[i] == 1) {
@@ -153,21 +179,22 @@ public class Reducingtable {
                 newSameAction.add(newString);
             }
         }
-        reducedTable.put(Letter, newSameAction);
+        reducedTable.put(key, newSameAction);
     }
     public static void assembly(ArrayList<String> conditionsAndOutput) {
         
         
-        for (int i = 0; i < ActionValues.length; i++) {
-            reduction((int) numberOfConditions, ActionValues[i], conditionsAndOutput);
+        for (int i = 0; i < keyValues.size(); i++) {
+            reduction((int)numberOfConditions,keyValues.get(i), conditionsAndOutput);
         }
+        
         System.out.println("Number Of Rules = " + (int) pow(numberOfConditionValues, numberOfConditions));
         afterReduction();
     }
-    public static void beforeReduction( Hashtable<String, ArrayList<String>> sameAction){
+    public static void beforeReduction( Hashtable<ArrayList<String>, ArrayList<String>> sameAction){
         System.out.println("------- BEFORE REDUCING -------");
-        for(int i=0;i<ActionValues.length;i++){
-            ArrayList<String> arr = sameAction.get(ActionValues[i]);
+        for(int i=0;i<keyValues.size();i++){
+            ArrayList<String> arr = sameAction.get(keyValues.get(i));
             for (int j = 0; j < arr.size(); j++) {
                 System.out.println(arr.get(j));
             }
@@ -175,8 +202,8 @@ public class Reducingtable {
     }
     public static void afterReduction(){
         System.out.println("------- AFTER REDUCING -------");
-        for (int i = 0; i < ActionValues.length; i++) {
-            ArrayList<String> arr = reducedTable.get(ActionValues[i]);
+        for (int i = 0; i < keyValues.size(); i++) {
+            ArrayList<String> arr = reducedTable.get(keyValues.get(i));
             for (int j = 0; j < arr.size(); j++) {
                 System.out.println(arr.get(j));
             }
@@ -184,7 +211,10 @@ public class Reducingtable {
     }
     public static void main(String[] args) {
         ArrayList<String> conditionsAndOutput = getInput();
-        beforeReduction(makeHashtable((int)numberOfConditions, conditionsAndOutput));
+        Hashtable<ArrayList<String>, ArrayList<String>> sad;
+        sad = makeHashtable(numberOfConditions, conditionsAndOutput);
+        beforeReduction(sad);
+        System.out.println(sad);
         assembly(conditionsAndOutput);
     }
 }
