@@ -38,19 +38,21 @@ public class Reducingtable {
         input = scannerObject.nextLine();
         String[] conditionValues = input.split(",");
         numberOfConditionValues = conditionValues.length;
+        
         System.out.print("Actions : ");
         input = scannerObject.nextLine();
+        
         System.out.print("Action Values separated by commas : ");
         input = scannerObject.nextLine();
-        ActionValues = input.split(",");
-
+/*
         double numberOfIterations = pow(numberOfConditionValues, numberOfConditions);
         System.out.println("Action scenario ");
         for (int i = 0; i < numberOfIterations; i++) {
             input = scannerObject.nextLine();
             conditionsAndOutput.add(input);
         }
-        /*        
+        */
+        
         conditionsAndOutput.add("PE,=<75,Y,C");
         conditionsAndOutput.add("PE,=<75,N,C");
 
@@ -61,7 +63,7 @@ public class Reducingtable {
         conditionsAndOutput.add("PA,=<75,N,DC");
         conditionsAndOutput.add("PA,>75,Y,C");
         conditionsAndOutput.add("PA,>75,N,DC");
-         */
+         
         ///a harder test case
         /*
        a,y,m,W,X,EMP,Z
@@ -127,7 +129,6 @@ public class Reducingtable {
         for (int i = 0; i < size; i++) {
             falseIndices[i] = 2;
             ArrayList<Integer> toBeAddedToList = new ArrayList<>();
-            toBeAddedToList.add(789);
             indexToMakeDash.add(toBeAddedToList);
         }
         ArrayList<String> bigArr = sameAction.get(key);
